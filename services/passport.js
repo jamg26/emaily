@@ -7,11 +7,12 @@ const User = mongoose.model('user');
 passport.serializeUser((user, done) => {
   done(null, user);
 });
-passport.deserializeUser((id, done) => {
-  User.findById(id).then(user => {
-    done(null, user);
-  });
+
+passport.deserializeUser(async (id, done) => {
+  const user = await User.findById(id);
+  done(null, user);
 });
+
 passport.use(
   new GoogleStrategy(
     {
@@ -20,22 +21,12 @@ passport.use(
       callbackURL: '/auth/google/callback',
       proxy: true
     },
-    (accessToken, refreshToken, profile, done) => {
-      User.findOne({
-        googleId: profile.id
-      }).then(user =>
-        user
-          ? done(null, user) // if user found
-          : // if user not found
-            new User({
-              googleId: profile.id,
-              name: profile.displayName
-            })
-              .save()
-              .then(user => {
-                done(null, user);
-              })
-      );
+
+    async (accessToken, refreshToken, profile, done) => {
+      const user = await User.findOne({ googleId: profile.id });
+      if (user) return done(null, user);
+      const newUser = await User.create({ googleId: profile.id });
+      done(null, newUser);
     }
   )
 );
