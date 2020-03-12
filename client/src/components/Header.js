@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Payments from './Payments';
+import { Button } from 'antd';
 
 class Header extends Component {
   renderContent() {
@@ -13,17 +15,25 @@ class Header extends Component {
             <a href='/auth/google'>Login with Google</a>
           </li>
         );
+
       default:
-        return (
-          <li>
+        return [
+          <li key='0'>
+            <Button style={{ color: 'white' }} type='link' size='large'>
+              Credits: {this.props.auth?.credits}
+            </Button>
+          </li>,
+          <li key='1'>
+            <Payments />
+          </li>,
+          <li key='2'>
             <a href='/api/logout'>Sign Out</a>
           </li>
-        );
+        ];
     }
   }
   render() {
     const { auth } = this.props;
-    console.log(auth?.googleId);
     return (
       <div>
         <nav className='nav-wrapper'>
