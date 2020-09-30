@@ -2,19 +2,23 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
-import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import reducers from './reducers';
 import 'antd/dist/antd.css';
 import 'materialize-css/dist/css/materialize.min.css';
 import 'materialize-css/dist/js/materialize.min.js';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import reducers from './reducers';
 import reduxThunk from 'redux-thunk';
 import { compose } from 'redux';
+
+import axios from 'axios';
+window.axios = axios;
 
 const composeEnhancers =
   (typeof window !== 'undefined' &&
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
   compose;
+
 const store = createStore(
   reducers,
   {},
